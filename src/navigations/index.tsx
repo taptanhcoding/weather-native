@@ -19,7 +19,7 @@ const AppNavigationContainer: FC<AppNavigationContainerProps> =  ({children})=> 
         <Stack.Navigator>
         <Stack.Screen name="Home" component={HomeScreen} options={{headerShown:false}} />
         <Stack.Screen name="Detail" component={DetailScreen} />
-        <Stack.Screen name="Search" component={SearchScreen} />
+        <Stack.Screen name="Search" component={SearchScreen} options={{headerShown:false}} />
         <Stack.Screen name="Notification" component={NotiScreen} />
         </Stack.Navigator>
     </NavigationContainer>
