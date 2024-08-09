@@ -12,8 +12,27 @@ export interface currentWtType {
     timezone: number
     id: number
     name: string
-    cod: number
+    cod: number,
+    [key:string]: any
   }
+
+export interface ListWtType {
+  cod: number,
+  message: string | number,
+  cnt: number,
+  list: currentWtType[],
+  city:{
+    id: number,
+    name: string,
+    coord: Coord,
+    country: string,
+    population: number,
+    timezone: number,
+    sunsire: number,
+    sunset: number
+  }
+}
+
   
   export interface Coord {
     lon: number

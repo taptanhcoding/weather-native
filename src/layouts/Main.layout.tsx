@@ -6,12 +6,12 @@ export default function MainLayout({children} :PropsWithChildren) {
     return <LinearGradient colors={['#47BFDF', '#4A91FF']}
     start={{x: 0, y: 0}}
     end={{x: 1, y: 1}}
-    style={styles.linearGradient}>
-        <SafeAreaView style={styles.container} >{children}</SafeAreaView>
+    style={stylesLayout.linearGradient}>
+        <SafeAreaView style={stylesLayout.container} >{children}</SafeAreaView>
     </LinearGradient>
 }
 
-const styles = StyleSheet.create({
+export const stylesLayout = StyleSheet.create({
     linearGradient: {
         flex: 1,
         paddingTop: 52,
