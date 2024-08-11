@@ -1,10 +1,10 @@
-import React, {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {memo, useCallback,  useRef, useState} from 'react';
 import {
   Button,
   Image,
   StyleSheet,
   Text,
-  TouchableHighlight,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
@@ -14,8 +14,8 @@ import IoIcon from 'react-native-vector-icons/Ionicons';
 import MainLayout from '../layouts/Main.layout';
 import {currentWtType} from '../model';
 import {wt} from '../apis/main';
-import type {AxiosResponse, ResponseType} from 'axios';
-import BottomSheet, {BottomSheetScrollView} from '@gorhom/bottom-sheet';
+
+
 
 interface RootStackParamList extends ParamListBase {
   Location: {
@@ -29,33 +29,25 @@ type ProfileRouteProp = RouteProp<RootStackParamList, 'Location'>;
 import {ParamListBase, RouteProp, useRoute} from '@react-navigation/native';
 import {setWt} from '../utils/comon.util';
 import NotiScreen from './Noti.Screen';
+import { AppBottomSheet } from '../components/BottomSheet';
+import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 
 function HomeScreen({navigation}: any) {
-  const sheetRef = useRef<BottomSheet>(null);
+  const sheetRef = useRef<BottomSheetMethods>(null);
   const router = useRoute<ProfileRouteProp>();
   const [currentWt, setCurrentWt] = useState<currentWtType | undefined>();
   const {city, lng, lat} = router.params;
 
-  const handleSheetChange = useCallback((index: number) => {
-  }, []);
+  
 
   // render
-  const renderItem = useCallback(
-    (item: any) => (
-      <View key={item} style={styles.itemContainer}>
-        <Text>{item}</Text>
-      </View>
-    ),
-    [],
-  );
-  const snapPoints = useMemo(() => ["25%", "50%"], []);
-  const handleSnapPress = useCallback((index:number) => {
-    sheetRef.current?.snapToIndex(index);
+ 
+  
+  const handleSnapPress = useCallback(() => {
+    sheetRef.current?.expand();
   }, []);
-  const handleClosePress = useCallback(() => {
-    sheetRef.current?.close();
-  }, []);
-  useEffect(() => {
+
+  React.useLayoutEffect(() => {
     (async () => {
       try {
         let crWt: any = await wt.current_wt({q: city});
@@ -94,6 +86,7 @@ function HomeScreen({navigation}: any) {
             <View style={styles.content}>
               <Image
                 style={styles.icon_cloud}
+                resizeMode='contain'
                 source={{
                   uri: `https://openweathermap.org/img/wn/${currentWt.weather[0].icon}.png`,
                 }}
@@ -132,12 +125,12 @@ function HomeScreen({navigation}: any) {
               </TouchableWithoutFeedback>
             </View>
             <View style={styles.footer}>
-              <TouchableHighlight  onPress={() => handleSnapPress(0)}>
+              <TouchableOpacity  onPress={() => handleSnapPress()}>
                 <View style={[styles.flex_row, styles.button_ft]}>
                   <Text>Forecast report</Text>
                   <FtIcon name="chevron-up" size={24} />
                 </View>
-              </TouchableHighlight>
+              </TouchableOpacity>
             </View>
             {/* sheet  */}
           </>
@@ -149,17 +142,16 @@ function HomeScreen({navigation}: any) {
           </View>
         )}
       </MainLayout>
-      <BottomSheet
-        ref={sheetRef}
-        index={-1}
-        snapPoints={snapPoints}
-        onChange={handleSheetChange}
-        enablePanDownToClose
+      <AppBottomSheet
+        bottomSheetRef={sheetRef}
+        enableDynamicSizing={true}
+        useBottomSheetView={true}
+        
         >
-        <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
+        <View style={styles.contentContainer} >
           <NotiScreen/>
-        </BottomSheetScrollView>
-      </BottomSheet>
+        </View>
+      </AppBottomSheet>
     </>
   );
 }
